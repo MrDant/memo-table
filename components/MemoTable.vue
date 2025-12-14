@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white rounded-lg shadow-xl p-8">
-    <div class="grid grid-cols-5 gap-4 mb-8">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
       <div
         v-for="number in numbers"
         :key="number"
@@ -32,65 +32,71 @@
       </div>
     </div>
 
-    <div v-if="selectedNumber !== null" class="border-t pt-6">
-      <h2 class="text-xl font-semibold mb-4 text-gray-700">
-        Sélectionner une icône pour le chiffre {{ selectedNumber }}
-      </h2>
-      <div class="mb-4">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Rechercher une icône (ex: pomme, chien, voiture...) ou entrez un mot directement"
-          @keyup.enter="handleEnterKey"
-          class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none transition-colors"
-        />
-        <p v-if="searchQuery && allIcons.length === 0 && !isLoading" class="mt-2 text-sm text-gray-600">
-          Aucune icône trouvée. Appuyez sur Entrée pour utiliser "{{ searchQuery }}" comme texte.
-        </p>
-      </div>
-      <div v-if="isLoading" class="text-center text-gray-500 py-8">
-        Recherche en cours...
-      </div>
-      <div v-else-if="allIcons.length > 0" class="grid grid-cols-8 gap-3 max-h-96 overflow-y-auto">
-        <button
-          v-for="icon in allIcons"
-          :key="icon"
-          @click="assignIcon(icon)"
-          class="p-4 border-2 rounded-lg hover:bg-indigo-50 hover:border-indigo-500 transition-all duration-200 flex items-center justify-center"
-          :class="icons[selectedNumber] && icons[selectedNumber] === icon ? 'border-indigo-500 bg-indigo-100' : 'border-gray-200'"
-          :title="icon"
-        >
-          <Icon 
-            :icon="icon" 
-            :width="32" 
-            :height="32"
-            class="text-gray-700"
-          />
-        </button>
-      </div>
-      <div v-else-if="searchQuery && !isLoading" class="text-center text-gray-500 py-8">
-        <p class="mb-4">Aucune icône trouvée pour "{{ searchQuery }}"</p>
-        <button
-          @click="assignTextIcon"
-          class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
-        >
-          Utiliser "{{ searchQuery }}" comme texte
-        </button>
-      </div>
-    </div>
+    <UDrawer v-model:open="open">
+      <template #content>
+        <div class="px-2 pb-8">
+          <h2 class="text-md md:text-xl text-center font-semibold mb-4 text-gray-700">
+            Sélectionner une icône pour le chiffre {{ selectedNumber }}
+          </h2>
+          <div class="mb-4">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Rechercher une icône (ex: pomme, chien, voiture...) ou entrez un mot directement"
+              @keyup.enter="handleEnterKey"
+              class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none transition-colors"
+            />
+            <p v-if="searchQuery && allIcons.length === 0 && !isLoading" class="mt-2 text-sm text-gray-600">
+              Aucune icône trouvée. Appuyez sur Entrée pour utiliser "{{ searchQuery }}" comme texte.
+            </p>
+          </div>
+          <div v-if="isLoading" class="text-center text-gray-500 py-8">
+            Recherche en cours...
+          </div>
+          <div v-else-if="allIcons.length > 0" class="flex flex-wrap justify-center gap-3 max-h-96 overflow-y-auto">
+            <button
+              v-for="icon in allIcons"
+              :key="icon"
+              @click="assignIcon(icon)"
+              class="p-4 border-2 rounded-lg hover:bg-indigo-50 hover:border-indigo-500 transition-all duration-200 flex items-center justify-center"
+              :class="icons[selectedNumber] && icons[selectedNumber] === icon ? 'border-indigo-500 bg-indigo-100' : 'border-gray-200'"
+              :title="icon"
+            >
+              <Icon 
+                :icon="icon" 
+                :width="32" 
+                :height="32"
+                class="text-gray-700"
+              />
+            </button>
+          </div>
+          <div v-else-if="searchQuery && !isLoading" class="text-center text-gray-500">
+            <p class="mb-4">Aucune icône trouvée pour "{{ searchQuery }}"</p>
+            <button
+              @click="assignTextIcon"
+              class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
+            >
+              Utiliser "{{ searchQuery }}" comme texte
+            </button>
+          </div>
+        </div>
+      </template>
+    </UDrawer>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { Icon } from '@iconify/vue'
+import { useStorage } from '@vueuse/core'
 
 const numbers = Array.from({ length: 10 }, (_, i) => i)
 const selectedNumber = ref(null)
-const icons = ref({})
+const icons = useStorage("my-icons",{})
 const searchQuery = ref('')
 const isLoading = ref(false)
 const allIcons = ref([])
+const open = ref(false)
 
 // Collections d'icônes spécifiques à utiliser
 const iconCollections = [
@@ -103,7 +109,6 @@ const iconCollections = [
 // Charger les icônes des collections spécifiées
 const loadIconsFromCollections = async () => {
   // if (allIcons.value.length > 0) return // Déjà chargé
-  
   isLoading.value = true
   
   const response = await fetch(`https://api.iconify.design/search?prefixes=${iconCollections.join(',')}&query=${searchQuery.value}`)
@@ -151,6 +156,7 @@ watch(searchQuery, (newQuery) => {
 const selectNumber = (number) => {
   selectedNumber.value = number
   searchQuery.value = ''
+  open.value = true
 }
 
 const assignIcon = (icon) => {
@@ -162,6 +168,7 @@ const assignIcon = (icon) => {
     }
     searchQuery.value = ''
   }
+  open.value = false
 }
 
 const assignTextIcon = () => {
@@ -179,6 +186,7 @@ const handleEnterKey = () => {
   if (allIcons.value.length === 0 && searchQuery.value.trim()) {
     assignTextIcon()
   }
+  open.value = false
 }
 
 const removeIcon = (number) => {
