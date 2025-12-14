@@ -13,7 +13,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,8 +29,7 @@ jobs:
       - name: Generate static site
         run: npm run generate
         env:
-          # Si le repo se termine par .github.io, baseURL est '/', sinon '/nom-du-repo/'
-          NUXT_PUBLIC_BASE_URL: ${{ endsWith(github.event.repository.name, '.github.io') && '/' || format('/{0}/', github.event.repository.name) }}
+          NUXT_PUBLIC_BASE_URL:  '/'
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -43,6 +42,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        environment:
-          name: github-pages
-
