@@ -1,56 +1,75 @@
-# Memo Table - Nuxt Project
+# Nuxt Minimal Starter
 
-Un projet Nuxt qui affiche un tableau de 0 à 9 permettant d'associer une icône à chaque chiffre.
+Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## Installation
+## Setup
+
+Make sure to install dependencies:
 
 ```bash
+# npm
 npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
+
+# bun
+bun install
 ```
 
-## Développement
+## Development Server
 
-Lancez le serveur de développement :
+Start the development server on `http://localhost:3000`:
 
 ```bash
+# npm
 npm run dev
+
+# pnpm
+pnpm dev
+
+# yarn
+yarn dev
+
+# bun
+bun run dev
 ```
 
-Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
+## Production
 
-## Fonctionnalités
+Build the application for production:
 
-- Tableau affichant les chiffres de 0 à 9
-- Sélection d'un chiffre pour lui associer une icône
-- Bibliothèque d'icônes variées (fruits, animaux, véhicules, etc.)
-- Possibilité de supprimer une icône associée
-- Interface moderne et responsive avec Tailwind CSS
+```bash
+# npm
+npm run build
 
-## Technologies
+# pnpm
+pnpm build
 
-- Nuxt 3
-- Vue 3
-- TypeScript
-- Tailwind CSS
+# yarn
+yarn build
 
-## Déploiement sur GitHub Pages
+# bun
+bun run build
+```
 
-Le projet est configuré pour être déployé automatiquement sur GitHub Pages via GitHub Actions.
+Locally preview production build:
 
-### Configuration requise
+```bash
+# npm
+npm run preview
 
-1. **Activer GitHub Pages dans les paramètres du repository** :
-   - Allez dans `Settings` > `Pages`
-   - Sous `Source`, sélectionnez `GitHub Actions`
+# pnpm
+pnpm preview
 
-2. **Mettre à jour le workflow** (si nécessaire) :
-   - Si votre repository n'est pas à la racine de votre compte GitHub, modifiez la variable `NUXT_PUBLIC_BASE_URL` dans `.github/workflows/deploy.yml`
-   - Pour un repository à la racine : `baseURL: '/'`
-   - Pour un repository dans un sous-dossier : `baseURL: '/nom-du-repo/'`
+# yarn
+yarn preview
 
-3. **Le déploiement se fait automatiquement** :
-   - À chaque push sur la branche `main`
-   - Ou manuellement via l'onglet `Actions` > `Deploy to GitHub Pages` > `Run workflow`
+# bun
+bun run preview
+```
 
-Le site sera disponible à l'adresse : `https://votre-username.github.io/memo-table/`
-
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
