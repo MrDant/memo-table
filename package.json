@@ -1,0 +1,22 @@
+{
+  "name": "memo-table",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "nuxt": "^3.13.0",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.1"
+  }
+}
+
