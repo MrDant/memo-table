@@ -6,7 +6,18 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   ssr: false, // Mode SPA pour GitHub Pages
   app: {
-    buildAssetsDir: '/_nuxt/'
+    buildAssetsDir: '/_nuxt/',
+    head: {
+      meta: [
+        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+      ],
+      link: [
+        { rel: 'apple-touch-icon', href: '/web-app-manifest-192x192.png' },
+        { rel: 'manifest', href: '/manifest.json' },
+      ],
+    },
   },
   tailwindcss: {
     exposeConfig: false,
