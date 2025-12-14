@@ -22,14 +22,11 @@
           </span>
           <span v-else>❓</span>
         </div>
-        <button
-          v-if="icons[number]"
-          @click.stop="removeIcon(number)"
-          class="mt-2 text-xs text-red-500 hover:text-red-700"
-        >
-          Supprimer
-        </button>
       </div>
+    </div>
+
+    <div class="flex gap-4 justify-center">
+      <UButton @click="training" color="primary" size="lg"  label="S'entraîner à convertir" />
     </div>
 
     <UDrawer v-model:open="open">
@@ -43,7 +40,7 @@
               v-model="searchQuery"
               type="text"
               placeholder="Rechercher une icône (ex: pomme, chien, voiture...) ou entrez un mot directement"
-              @keyup.enter="handleEnterKey"
+              @keyup.enter="assignTextIcon"
               class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none transition-colors"
             />
             <p v-if="searchQuery && allIcons.length === 0 && !isLoading" class="mt-2 text-sm text-gray-600">
@@ -89,6 +86,7 @@
 import { ref, computed, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useStorage } from '@vueuse/core'
+import { ModalTrainingConvert } from '#components'
 
 const numbers = Array.from({ length: 10 }, (_, i) => i)
 const selectedNumber = ref(null)
@@ -97,6 +95,8 @@ const searchQuery = ref('')
 const isLoading = ref(false)
 const allIcons = ref([])
 const open = ref(false)
+
+const modal = useOverlay().create(ModalTrainingConvert)
 
 // Collections d'icônes spécifiques à utiliser
 const iconCollections = [
@@ -180,16 +180,16 @@ const assignTextIcon = () => {
     }
     searchQuery.value = ''
   }
-}
-
-const handleEnterKey = () => {
-  if (allIcons.value.length === 0 && searchQuery.value.trim()) {
-    assignTextIcon()
-  }
   open.value = false
 }
 
+
 const removeIcon = (number) => {
   delete icons.value[number]
+}
+
+const training = () => {
+  console.log("pass")
+  modal.open()
 }
 </script>
